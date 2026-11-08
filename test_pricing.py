@@ -8,6 +8,9 @@ class TestPricing(unittest.TestCase):
     def test_gold(self):
         self.assertEqual(calculate_discount(100.0, "gold"), 10.0)
 
+    def test_silver(self):
+        self.assertEqual(calculate_discount(100.0, "silver"), 15.0)
+
     def test_standard(self):
         self.assertEqual(calculate_discount(100.0, "regular"), 0.0)
 
