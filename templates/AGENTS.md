@@ -4,7 +4,17 @@
 
 ---
 
-## 1. Prerequisite: Gentle AI Ecosystem & Tooling
+## 1. Active Project Profile
+
+- **Archetype**: `<PROFILE_ARCHETYPE>` <!-- landing | ecommerce | erp | backend | fullstack -->
+- **Design Contract**: `<DESIGN_CONTRACT>` <!-- ./DESIGN.md or N/A -->
+- **Enabled Profile MCPs**: `<ENABLED_MCPS>` <!-- e.g. engram, context7, shadcn, playwright, semgrep, socket, postgres -->
+- **Security Gate**: `<SECURITY_GATE>` <!-- enabled | disabled -->
+- **Database Profile**: `<DB_PROFILE>` <!-- postgres-restricted | none -->
+
+---
+
+## 2. Prerequisite Pre-Flight: Gentle AI & Active MCPs
 
 Before touching any code, the agent MUST verify the environment:
 
@@ -12,18 +22,31 @@ Before touching any code, the agent MUST verify the environment:
    ```bash
    command -v gentle-ai >/dev/null 2>&1 || { echo "ERROR: gentle-ai is required but not installed."; exit 1; }
    ```
-   - **If installed**: Run `gentle-ai skill-registry refresh` to index project capabilities.
-   - **If NOT installed**: **STOP IMMEDIATELY**. Do not guess or execute changes. Notify the user that `gentle-ai` is required to enforce repository standards, and provide the official installation command:
+   - **If installed**: Run `gentle-ai skill-registry refresh` to index global and project skills.
+   - **If NOT installed**: **STOP IMMEDIATELY**. Do not guess or execute changes. Notify the user and provide the official installer:
      ```bash
      curl -sL https://gentlemanprogramming.com/install.sh | bash
      ```
-2. **Verify Toolchains & Baseline Tests**:
-   - Inspect build/test configs (`package.json`, `Cargo.toml`, `go.mod`, etc.).
+2. **Verify Active Project MCPs & Contracts**:
+   - Confirm workspace MCP config in `.agents/mcp_config.json` (and `.mcp.json` if present) matches the active profile above.
+   - If `<DESIGN_CONTRACT>` is `./DESIGN.md`, read `./DESIGN.md` before writing or modifying any UI component or style.
+   - Query Engram (`mem_search`) for existing project decisions/context before planning changes.
+3. **Verify Toolchains & Baseline Tests**:
+   - Inspect build/test configs (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, etc.).
    - Ensure existing tests pass before touching code to establish an accurate baseline.
 
 ---
 
-## 2. The 4 Operative Coding Pillars (Karpathy Guidelines)
+## 3. Audit Synergy (Complementary Gates)
+
+Security and quality checks operate as three complementary, non-overlapping layers:
+- **`semgrep` MCP (Deterministic SAST)**: Fast local static analysis on modified files (and staged files via `.git/hooks/pre-commit`).
+- **Trail of Bits Skills (Logical Security Lens)**: `differential-review` (diff blast radius), `insecure-defaults` (fail-open config), `sharp-edges` (misuse-prone APIs), and `fp-check` (exploitability verification before reporting/patching).
+- **Gentle AI `Judgment Day` (Adversarial Milestone Review)**: Blind multi-perspective review reserved for major features, schema changes, and critical integrations.
+
+---
+
+## 4. The 4 Operative Coding Pillars (Karpathy Guidelines)
 
 ### Pillar 1: Think Before Coding
 - **Zero silent assumptions**: Never guess business logic, API contracts, schema structures, or architecture silently.
@@ -49,7 +72,7 @@ Before touching any code, the agent MUST verify the environment:
 
 ---
 
-## 3. Repository Commands (Fill in for this project)
+## 5. Repository Commands (Fill in for this project)
 
 ```bash
 # Build
@@ -64,7 +87,7 @@ Before touching any code, the agent MUST verify the environment:
 
 ---
 
-## 4. Git & Commit Conventions
+## 6. Git & Commit Conventions
 
 - Use **Conventional Commits** (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`).
 - Commits must represent atomic, coherent units of work with their tests and documentation.

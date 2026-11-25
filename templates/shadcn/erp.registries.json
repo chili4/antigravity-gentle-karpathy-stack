@@ -1,0 +1,6 @@
+{
+  "registries": {
+    "@originui": "https://originui.com/r/{name}.json",
+    "@diceui": "https://diceui.com/r/{style}/{name}.json"
+  }
+}

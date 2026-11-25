@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "if [ -f .env ]; then set -a; . ./.env; set +a; fi; export DATABASE_URI=\"${DATABASE_URI:-${DATABASE_URL:-}}\"; exec uvx postgres-mcp --access-mode=restricted"
+      ]
+    }
+  }
+}
