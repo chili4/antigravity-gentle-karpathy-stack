@@ -98,7 +98,7 @@ Perfiles soportados: `landing`, `ecommerce`, `erp`, `backend`, `fullstack`.
 * **`scripts/setup-gentle-karpathy.sh`**: Bootstrap global reproducible e idempotente (`--full`, `--core-only`, `--no-security`, `--no-frontend`).
 * **`scripts/init-project.sh`**: Inicialización modular por proyecto (`AGENTS.md`, `DESIGN.md`, `shadcn` registries, merge no destructivo en `.agents/mcp_config.json`, `.env.example`/`.gitignore` y hook `pre-commit`).
 * **`scripts/doctor.sh`**: Diagnóstico integral `[OK]` / `[WARN]` / `[FAIL]` del ecosistema global y de cualquier proyecto (`--project`).
-* **`rules/karpathy-rules.md`** y **`rules/stack-routing.md`**: Reglas globales `always_on` (< 3 KB cada una, cumpliendo el límite de 24 KB).
+* **`rules/karpathy-rules.md`**, **`rules/stack-routing.md`** y **`rules/spanish-neutral-style.md`**: Reglas globales `always_on` (< 3 KB cada una, cumpliendo el límite de 24 KB; la última impone español neutro y profesional sin anglicismos innecesarios).
 * **`skills/karpathy-guidelines/`**: Skill global base con *progressive disclosure*.
 * **`templates/`**: Contrato `AGENTS.md`, contratos visuales (`design/{landing,ecommerce,erp}.DESIGN.md`), presets `shadcn/`, fragmentos `mcp/` y `hooks/pre-commit-semgrep.sh`.
 * **`examples/coupons/`**: Ejemplo de referencia ODD + TDD (RED/GREEN) + control de concurrencia (TOCTOU lock).

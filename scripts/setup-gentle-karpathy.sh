@@ -15,20 +15,23 @@ WITH_FRONTEND=true
 WITH_SECURITY=true
 WITH_DB_SKILL=true
 RUN_DOCTOR=true
+PERSONA="neutral"
+PERSONA_EXPLICIT=false
 
 usage() {
   cat << 'EOF'
 Usage: ./scripts/setup-gentle-karpathy.sh [OPTIONS]
 
 Options:
-  --full           Install all layers: core + frontend + security + db skill (default)
-  --core-only      Install only Gentle AI + Karpathy core (skip frontend, security, db skill)
-  --no-frontend    Skip Playwright Chromium and Impeccable skill
-  --no-security    Skip Semgrep CLI and Trail of Bits security skills
-  --no-db-skill    Skip supabase-postgres-best-practices skill
-  --with-db-skill  Include supabase-postgres-best-practices skill
-  --skip-doctor    Skip final ./scripts/doctor.sh run
-  -h, --help       Show this help message
+  --full             Install all layers: core + frontend + security + db skill (default)
+  --core-only        Install only Gentle AI + Karpathy core (skip frontend, security, db skill)
+  --no-frontend      Skip Playwright Chromium and Impeccable skill
+  --no-security      Skip Semgrep CLI and Trail of Bits security skills
+  --no-db-skill      Skip supabase-postgres-best-practices skill
+  --with-db-skill    Include supabase-postgres-best-practices skill
+  --persona NAME     Gentle AI persona (neutral|gentleman, default: neutral)
+  --skip-doctor      Skip final ./scripts/doctor.sh run
+  -h, --help         Show this help message
 EOF
 }
 
@@ -56,6 +59,12 @@ while [ "$#" -gt 0 ]; do
     --with-db-skill)
       WITH_DB_SKILL=true
       ;;
+    --persona)
+      [ "$#" -ge 2 ] || ERROR "--persona requires a value (neutral|gentleman)."
+      PERSONA="$2"
+      PERSONA_EXPLICIT=true
+      shift
+      ;;
     --skip-doctor)
       RUN_DOCTOR=false
       ;;
@@ -69,6 +78,11 @@ while [ "$#" -gt 0 ]; do
   esac
   shift
 done
+
+case "$PERSONA" in
+  neutral|gentleman) ;;
+  *) ERROR "Invalid persona '$PERSONA'. Expected: neutral or gentleman." ;;
+esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -276,6 +290,11 @@ command -v gentle-ai >/dev/null 2>&1 || ERROR "gentle-ai executable not found in
 INFO "Ensuring gentle-ai is at version >= 4.4.0..."
 gentle-ai upgrade || WARN "Could not run gentle-ai upgrade automatically; check gentle-ai --version."
 
+if [ ! -f "$HOME/.gentle-ai/state.json" ] || [ "$PERSONA_EXPLICIT" = true ]; then
+  INFO "Configuring Gentle AI for Antigravity (persona: $PERSONA)..."
+  gentle-ai install --agent antigravity --preset full-gentleman --persona "$PERSONA"
+fi
+
 INFO "Syncing Antigravity managed components and rules..."
 gentle-ai sync
 
@@ -287,8 +306,12 @@ mkdir -p "$RULES_DIR"
 
 cp "$REPO_ROOT/rules/karpathy-rules.md" "$RULES_DIR/karpathy-rules.md"
 cp "$REPO_ROOT/rules/stack-routing.md" "$RULES_DIR/stack-routing.md"
+cp "$REPO_ROOT/rules/spanish-neutral-style.md" "$RULES_DIR/spanish-neutral-style.md"
 
-for rule_file in "$RULES_DIR/karpathy-rules.md" "$RULES_DIR/stack-routing.md"; do
+for rule_file in \
+  "$RULES_DIR/karpathy-rules.md" \
+  "$RULES_DIR/stack-routing.md" \
+  "$RULES_DIR/spanish-neutral-style.md"; do
   byte_size=$(wc -c < "$rule_file" | tr -d ' ')
   if [ "$byte_size" -ge 24000 ]; then
     ERROR "Rule $rule_file is $byte_size bytes, violating the 24 KB Antigravity quota!"
